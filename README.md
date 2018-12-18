@@ -54,9 +54,10 @@ around_action :with_readonly, except: []
 - 別DBに分割するmodelの継承元を、application_recordから変更する
 
 例: 
-[cat_parentモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_parent.rb#L1)
 
-[cat_childモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_child.rb#L1）
+- [cat_parentモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_parent.rb#L1)
+
+- [cat_childモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_child.rb#L1)
 
 ## Logger
 gem 'arproxy'を使い、ログファイルに接続先のDBと、Read/Writeの情報を出す
