@@ -6,7 +6,7 @@ DB1: master/slave
 
 DB2: master/slave
 
-垂直分割 + master/slave構成
+つまり、垂直分割 + master/slave構成
 
 ## 設定のポイント
 
@@ -33,7 +33,7 @@ DB2: master/slave
 
 - with_readonlyの共通メソッドをつくる
 
-controller単位で、必要に応じてreadonly側からselectできるようになる。
+controller単位で、必要に応じてreadonly側からselectできるようになる。controllerでreadonlyを指定した場合は、with_writableブロックが無い限り、viewでの読み込みや、アソシエーションも全てreadonly側になる （上記設定をしたapplication_recordを継承しているモデルの場合）
 
 ## 上記の設定をした場合の挙動
 
