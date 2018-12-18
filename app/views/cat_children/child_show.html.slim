@@ -1,0 +1,14 @@
+h1
+  | #{@cat_child.name}の詳細
+div
+  | 名前 #{@cat_child.name}
+  br
+  | 親の名前 #{@cat_child.cat_parent.name}
+  br
+  a[href="#{child_edit_cat_child_path(@cat_child)}"]
+    | 編集する
+
+hr
+div
+  a[href="#{children_cat_child_path(@cat_child.cat_parent)}"]
+    | < 子供一へ戻る

@@ -1,0 +1,15 @@
+h1
+  | 犬の親一覧
+
+ul
+  - DogParent.all.each do |dog_parent|
+    li
+      a[href="#{dog_parent_path(dog_parent)}"]
+        | #{dog_parent.name}
+
+a[href="#{new_dog_parent_path}"]
+  | 新規作成
+
+hr
+a[href="#{dogs_path}"]
+  | < 犬の統計へ戻る

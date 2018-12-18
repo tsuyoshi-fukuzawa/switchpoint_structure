@@ -1,0 +1,7 @@
+h1
+  | #{@dog_child.name}の編集
+
+- @dog_child.errors.full_messages.first if @dog_child.errors.any?
+= form_for(@dog_child, url: child_update_dog_child_path(@dog_child), method: :patch ) do |f|
+    = f.text_field :name, { class: '', placeholder: '例) コロ' }
+    = submit_tag("送信", class: '', data: {disable_with: '送信中'})

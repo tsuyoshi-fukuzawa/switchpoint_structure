@@ -1,0 +1,14 @@
+h1
+  | #{@dog_child.name}の詳細
+div
+  | 名前 #{@dog_child.name}
+  br
+  | 親の名前 #{@dog_child.dog_parent.name}
+  br
+  a[href="#{child_edit_dog_child_path(@dog_child)}"]
+    | 編集する
+
+hr
+div
+  a[href="#{children_dog_child_path(@dog_child.dog_parent)}"]
+    | < 子供一へ戻る

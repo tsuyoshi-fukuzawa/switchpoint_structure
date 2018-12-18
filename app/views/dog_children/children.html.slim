@@ -1,0 +1,15 @@
+h1
+  | #{@dog_parent.name}の子供一覧
+
+ul
+  - @dog_children.all.each do |dog_child|
+    li
+      a[href="#{child_show_dog_child_path(dog_child)}"]
+        = dog_child.name
+
+a[href="#{child_new_dog_child_path(@dog_parent)}"]
+  | 新規作成
+
+hr
+a[href="#{dog_parent_path(@dog_parent)}"]
+  | < 親の情報へ

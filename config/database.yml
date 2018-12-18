@@ -1,0 +1,32 @@
+default: &default
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: 'switchpoint'
+  username: 'switchpoint'
+  password: 'switchpoint'
+  timeout: 5000
+
+
+# mysqlのmaster/slaveを指定するのが正しいが、mockでは単一DBで同じところを指定しておく
+development:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST_MAIN_MASTER") { 'localhost' } %>
+
+development_readonly:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST_MAIN_SLAVE") { 'localhost' } %>
+
+development_other:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST_SUB_MASTER") { 'localhost' } %>
+
+development_other_readonly:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST_SUB_SLAVE") { 'localhost' } %>
+
+test:
+  <<: *default
+  database: 'switchpoint_test'
+
+production:
+  <<: *default

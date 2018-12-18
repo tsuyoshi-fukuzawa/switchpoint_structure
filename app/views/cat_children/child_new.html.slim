@@ -1,0 +1,7 @@
+h1
+  | #{@cat_parent.name}の子供の新規作成
+
+- @cat_child.errors.full_messages.first if @cat_child.errors.any?
+= form_for(@cat_child, url: child_create_cat_child_path(@cat_parent), method: :post ) do |f|
+  = f.text_field :name, { class: '', placeholder: '例) コロ' }
+  = submit_tag("送信", class: '', data: {disable_with: '送信中'})

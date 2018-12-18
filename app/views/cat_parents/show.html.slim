@@ -1,0 +1,17 @@
+h1
+  | 猫の親の詳細
+div
+  | 名前 #{@cat_parent.name}
+  br
+  | 子供の数 #{@cat_parent.cat_children.size}
+  br
+  a[href="#{edit_cat_parent_path(@cat_parent)}"]
+    | 編集する
+  br
+  a[href="#{children_cat_child_path(@cat_parent)}"]
+    | 子供の情報を見る
+
+hr
+div
+  a[href="#{cat_parents_path}"]
+    | < 一覧へ戻る

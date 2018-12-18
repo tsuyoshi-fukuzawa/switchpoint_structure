@@ -1,0 +1,15 @@
+h1
+  | #{@cat_parent.name}の子供一覧
+
+ul
+  - @cat_children.all.each do |cat_child|
+    li
+      a[href="#{child_show_cat_child_path(cat_child)}"]
+        = cat_child.name
+
+a[href="#{child_new_cat_child_path(@cat_parent)}"]
+  | 新規作成
+
+hr
+a[href="#{cat_parent_path(@cat_parent)}"]
+  | < 親の情報へ

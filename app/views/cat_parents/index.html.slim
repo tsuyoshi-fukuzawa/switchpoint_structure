@@ -1,0 +1,15 @@
+h1
+  | 猫の親一覧
+
+ul
+  - CatParent.all.each do |cat_parent|
+    li
+      a[href="#{cat_parent_path(cat_parent)}"]
+        | #{cat_parent.name}
+
+a[href="#{new_cat_parent_path}"]
+  | 新規作成
+
+hr
+a[href="#{cats_path}"]
+  | < 猫の統計へ戻る

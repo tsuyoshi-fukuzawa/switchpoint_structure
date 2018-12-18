@@ -1,0 +1,20 @@
+h2
+  | 犬の統計
+p
+  | 親の数 #{DogParent.all.size}
+  / -> readonly: Controllerのaroundで指定した場合は、viewもその影響を受ける
+  br
+  | 子供の数 #{DogChild.all.size}
+  / -> readonly: Controllerのaroundで指定した場合は、viewもその影響を受ける
+
+a[href="#{dog_parents_path}"]
+  | 親の一覧を見る
+
+hr
+a[href="#{animals_path}"]
+  | 動物一覧へ戻る
+
+hr
+p
+  | ちなみに猫の親は#{CatParent.all.size}
+  / -> writable: Controllerのaroundで指定したDBの接続先と違う場合は、デフォルトのモードで接続が走る。エラーにはならない。

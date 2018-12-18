@@ -1,0 +1,7 @@
+h1
+  | 猫の親の編集
+
+- @cat_parent.errors.full_messages.first if @cat_parent.errors.any?
+= form_for(@cat_parent, url: cat_parent_path(@cat_parent), method: :patch ) do |f|
+    = f.text_field :name, { class: '', placeholder: '例) ポチ' }
+    = submit_tag("送信", class: '', data: {disable_with: '送信中'})

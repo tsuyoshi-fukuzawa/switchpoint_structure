@@ -1,0 +1,7 @@
+h1
+  | 犬の親の新規作成
+
+- @dog_parent.errors.full_messages.first if @dog_parent.errors.any?
+= form_for(@dog_parent, url: dog_parents_path, method: :post ) do |f|
+  = f.text_field :name, { class: '', placeholder: '例) ポチ' }
+  = submit_tag("送信", class: '', data: {disable_with: '送信中'})
