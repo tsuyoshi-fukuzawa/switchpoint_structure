@@ -1,16 +1,13 @@
 # https://qiita.com/dany1468/items/93a36356df695d537a8a
 
-namespace :sub do
+namespace :another do
   task :set_custom_db_config_paths do
-    p 1
-    ENV['SCHEMA']                                     = 'db/schema_sub.rb'
+    ENV['SCHEMA']                                     = 'db/schema_another.rb'
     Rails.application.config.paths['db']              = ['db']
-    Rails.application.config.paths['db/migrate']      = ['db/migrate_sub']
-    Rails.application.config.paths['db/seeds.rb']     = ['db/seeds_sub.rb']
-    Rails.application.config.paths['config/database'] = ['config/database.yml']
-    ActiveRecord::Migrator.migrations_paths           = 'db/migrate_sub'
-
-    ActiveRecord::Base.establish_connection "development_other"
+    Rails.application.config.paths['db/migrate']      = ['db/migrate_another']
+    Rails.application.config.paths['db/seeds.rb']     = ['db/seeds_another.rb']
+    Rails.application.config.paths['config/database'] = ['config/database_another.yml']
+    ActiveRecord::Migrator.migrations_paths           = 'db/migrate_another'
   end
 
   namespace :db do
@@ -23,7 +20,6 @@ namespace :sub do
     end
 
     task migrate: :set_custom_db_config_paths do
-      p 2
       Rake::Task["db:migrate"].invoke
     end
 
@@ -53,5 +49,4 @@ namespace :sub do
       end
     end
   end
-
 end

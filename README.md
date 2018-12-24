@@ -72,3 +72,33 @@ DogParent Load [dog][writable] (78.1ms)  SELECT  `dog_parents`.* FROM `dog_paren
 
 - [config/initializers/arproxy.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/arproxy.rb)
 
+
+## Migration
+
+### DB作成
+
+#### MAIN DB
+
+以下のコマンドで管理します
+```
+bundle exec rake db:drop
+bundle exec rake db:create
+bundle exec rake db:migrate
+```
+
+#### Another DB
+
+以下のコマンドで管理します。
+```
+bundle exec rake another:db:drop
+bundle exec rake another:db:create
+bundle exec rake another:db:migrate
+```
+
+
+
+
+
+
+
+
