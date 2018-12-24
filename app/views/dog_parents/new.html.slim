@@ -1,5 +1,7 @@
+= render partial: "global/bread", locals: { second_title: '犬の情報', second_url: "#{dogs_path}", third_title: '親の一覧', third_url: "#{dog_parents_path}", fourth_title: '新規作成' }
+
 h1
-  | 犬の親の新規作成
+  | 親の新規作成
 
 - @dog_parent.errors.full_messages.first if @dog_parent.errors.any?
 = form_for(@dog_parent, url: dog_parents_path, method: :post ) do |f|

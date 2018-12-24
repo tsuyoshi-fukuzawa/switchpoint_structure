@@ -1,0 +1,58 @@
+- second_title = second_title
+- second_url   = second_url
+- third_title  = third_title
+- third_url    = third_url
+- fourth_title = fourth_title
+- fourth_url   = fourth_url
+- fifth_title  = fifth_title
+- fifth_url    = fifth_url
+- sixth_title  = sixth_title
+- sixth_url    = sixth_url
+
+.mock-bread
+  ul
+    li
+      a[href="#{animals_path}"]
+        | TOP
+    - if second_title.present?
+      li
+        - if second_url.present?
+          a[href="#{second_url}"]
+            = second_title
+        - else
+          = second_title
+
+    - if third_title.present?
+      li
+        - if third_url.present?
+          a[href="#{third_url}"]
+            = third_title
+        - else
+          = third_title
+
+    - if fourth_title.present?
+      li
+        - if fourth_url.present?
+          a[href="#{fourth_url}"]
+            = fourth_title
+        - else
+          = fourth_title
+
+    - if fifth_title.present?
+      li
+        - if fifth_url.present?
+          a[href="#{fifth_url}"]
+            = fifth_title
+        - else
+          = fifth_title
+
+    - if sixth_title.present?
+      li
+        - if sixth_url.present?
+          a[href="#{sixth_url}"]
+            = sixth_title
+        - else
+          = sixth_title
+
+
+

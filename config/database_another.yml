@@ -1,0 +1,19 @@
+# another系のmigrationのために存在。できればdatabase.ymlに統合したい
+default: &default
+  adapter: mysql2
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: 'switchpoint'
+  username: 'switchpoint'
+  password: 'switchpoint'
+  timeout: 5000
+
+development:
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
+
+test:
+  <<: *default
+  database: 'switchpoint_test'
+
+production:
+  <<: *default

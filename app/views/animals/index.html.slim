@@ -1,10 +1,11 @@
+= render partial: "global/bread"
 
 h2
   | 犬
 p
   
   a[href="#{dogs_path}"]
-    | 親の数 #{@dog_parents_count}、
+    | 親犬の数 #{@dog_parents_count}、
     / -> readonly : controllerでwith_readonlyを指定しているからread側
 
     | 子犬の数 #{DogChild.all.size}
@@ -15,7 +16,7 @@ h2
   | 猫
 p
   a[href="#{cats_path}"]
-    | 親の数 #{@cat_parents.all.size}、
+    | 親猫の数 #{@cat_parents.all.size}、
     / -> writable : controllerでwith_readonlyを指定しているが、viewでsizeを付与し、実行タイミングがブロックから外れるためwriter側
 
     | 子猫の数 #{CatChild.all.size}

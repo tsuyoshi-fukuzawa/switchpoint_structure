@@ -1,7 +1,9 @@
+= render partial: "global/bread", locals: { second_title: '猫の情報', second_url: "#{cats_path}", third_title: '親の一覧', third_url: "#{cat_parents_path}", fourth_title: '親の詳細', fourth_url: "#{cat_parent_path(@cat_child.cat_parent)}", fifth_title: '子供一覧', fifth_url: "#{children_cat_child_path(@cat_child.cat_parent)}", sixth_title: '子の詳細'  }
+
 h1
   | #{@cat_child.name}の編集
 
 - @cat_child.errors.full_messages.first if @cat_child.errors.any?
 = form_for(@cat_child, url: child_update_cat_child_path(@cat_child), method: :patch ) do |f|
-    = f.text_field :name, { class: '', placeholder: '例) コロ' }
+    = f.text_field :name, { class: '', placeholder: '例) ミケ' }
     = submit_tag("送信", class: '', data: {disable_with: '送信中'})

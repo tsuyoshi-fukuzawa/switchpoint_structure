@@ -16,13 +16,13 @@ development_readonly:
   <<: *default
   host: <%= ENV.fetch("DB_HOST_MAIN_SLAVE") { 'localhost' } %>
 
-development_other:
+development_another:
   <<: *default
-  host: <%= ENV.fetch("DB_HOST_SUB_MASTER") { 'localhost' } %>
+  host: <%= ENV.fetch("DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
-development_other_readonly:
+development_another_readonly:
   <<: *default
-  host: <%= ENV.fetch("DB_HOST_SUB_SLAVE") { 'localhost' } %>
+  host: <%= ENV.fetch("DB_HOST_ANOTHER_SLAVE") { 'localhost' } %>
 
 test:
   <<: *default

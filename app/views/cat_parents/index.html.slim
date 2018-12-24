@@ -1,5 +1,7 @@
+= render partial: "global/bread", locals: { second_title: '猫の情報', second_url: "#{cats_path}", third_title: '猫の一覧' }
+
 h1
-  | 猫の親一覧
+  | 親の一覧
 
 ul
   - CatParent.all.each do |cat_parent|
@@ -7,9 +9,6 @@ ul
       a[href="#{cat_parent_path(cat_parent)}"]
         | #{cat_parent.name}
 
+hr
 a[href="#{new_cat_parent_path}"]
   | 新規作成
-
-hr
-a[href="#{cats_path}"]
-  | < 猫の統計へ戻る

@@ -1,5 +1,7 @@
+= render partial: "global/bread", locals: { second_title: '猫の情報', second_url: "#{cats_path}", third_title: '猫の一覧', third_url: "#{cat_parents_path}", fourth_title: '親の編集' }
+
 h1
-  | 猫の親の編集
+  | 親の編集
 
 - @cat_parent.errors.full_messages.first if @cat_parent.errors.any?
 = form_for(@cat_parent, url: cat_parent_path(@cat_parent), method: :patch ) do |f|
