@@ -1,12 +1,16 @@
-namespace :foo do
-  # desc "Configure the variables that rails need in order to look up for the db configuration in a different folder"
+# https://qiita.com/dany1468/items/93a36356df695d537a8a
+
+namespace :sub do
   task :set_custom_db_config_paths do
+    p 1
     ENV['SCHEMA']                                     = 'db/schema_sub.rb'
     Rails.application.config.paths['db']              = ['db']
     Rails.application.config.paths['db/migrate']      = ['db/migrate_sub']
     Rails.application.config.paths['db/seeds.rb']     = ['db/seeds_sub.rb']
-    Rails.application.config.paths['config/database'] = ['config/database_sub.yml']
-    ActiveRecord::Migrator.migrations_paths           = 'db_foo/migrate'
+    Rails.application.config.paths['config/database'] = ['config/database.yml']
+    ActiveRecord::Migrator.migrations_paths           = 'db/migrate_sub'
+
+    ActiveRecord::Base.establish_connection "development_other"
   end
 
   namespace :db do
@@ -19,6 +23,7 @@ namespace :foo do
     end
 
     task migrate: :set_custom_db_config_paths do
+      p 2
       Rake::Task["db:migrate"].invoke
     end
 
