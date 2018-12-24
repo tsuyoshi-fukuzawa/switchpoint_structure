@@ -109,7 +109,7 @@ Modelの継承元を、application_recordから変更する
 
 ## 設定
 
-lib/tasks/db_another.rake
+[lib/tasks/db_another.rake](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/lib/tasks/db_another.rake)
 
 ## コマンド
 
