@@ -1,6 +1,6 @@
 # SwitchPointStructure
 
-## 構成
+switchpointを使った複数DB構成に接続するrailsの構築例。
 
 MasterDB: master/slave
 
@@ -8,9 +8,9 @@ AnotherDB: master/slave
 
 (垂直分割+master/slave構成)
 
-## 構築方法
+# 構築方法
 
-### 初期設定ファイル
+## 初期設定ファイル
 
 - [config/initializers/switch_point.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/switch_point.rb)
 
@@ -19,7 +19,7 @@ AnotherDB: master/slave
 3. Rspecのために、testの場合はreadonlyを消す
   readonlyの設定を消すと、with_readonlyブロックで囲われても、writableに接続できる
 
-### モデルのルートクラス
+## モデルのルートクラス
 
 - [app/models/application_record.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record.rb)
 
@@ -36,7 +36,7 @@ dog系はapplication_record、cat系はapplication_record_catというように�
 例: [application_record_cat.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record_cat.rb)
 
 
-### コントローラのルートクラス
+## コントローラのルートクラス
 
 - [app/controllers/application_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/application_controller.rb)
 
@@ -47,7 +47,7 @@ with_readonlyの共通メソッドをつくり、controllerでaround_actionで�
 これで、controller単位でreadonly側からselectできるようになる。なお、controllerでreadonlyを指定した場合は、メドッド内にwith_writableブロックが無い限り、
 viewでの読み込みや、アソシエーションも全てreadonly側になる。
 
-### Logger
+## Logger
 
 gem 'arproxy'を使い、ログファイルに接続先のDBと、Read/Writeの情報を出す
 
@@ -59,11 +59,11 @@ gem 'arproxy'を使い、ログファイルに接続先のDBと、Read/Writeの�
 DogParent Load [dog][writable] (78.1ms)  SELECT  `dog_parents`.* FROM `dog_parents` WHERE `dog_parents`.`id` = 1 LIMIT 1
 ```
 
-## 構築後の手順
+# 構築後の手順
 
 構築が完了した後は、以下の手順で、slave側へ処理を逃すことや、垂直分割した別DBヘ接続することができる。
 
-### Readonlyへ処理を移す
+## Readonlyへ処理を移す
 
 - [app/controllers/dogs_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/dogs_controller.rb)
 
@@ -73,23 +73,23 @@ Slaveへ接続したいcontrollerの先頭に、以下を記述する
 around_action :with_readonly, except: []
 ```
 
-### 分割したDBへ接続する
+## 分割したDBへ接続する
 
 - [cat_parentモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_parent.rb#L1)
 - [cat_childモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_child.rb#L1)
 
 Modelの継承元を、application_recordから変更する
 
-## DB管理 (migrationなど)
+# DB管理 (migrationなど)
 
-### パターン
+## パターン
 
 垂直分割する場合、migration等の運用手順が増える。
 
 その際、migrationを行う方法として、以下の手段が考えられる。
 
 
-#### 方法1. 擬似的に垂直分割する
+### 方法1. 擬似的に垂直分割する
 
 同じテーブル構成のmasterDBを複数台用意し、使用するテーブルを振り分けて使う。
 
@@ -99,7 +99,7 @@ Modelの継承元を、application_recordから変更する
 
 ただ、本番DBにトラブルが起きた時や、振り分けミスが発生した際は、リカバリが非常につらい。
 
-#### 方法2. 別のrakeタスクを用意する
+### 方法2. 別のrakeタスクを用意する
 
 別DBに接続するrakeタスクを作成する。設定ファイル類も全て別のものを用意する(migrateファイル、database.ymlなど)
 
@@ -111,20 +111,20 @@ Modelの継承元を、application_recordから変更する
 
 このstructureサンプルでは、この方法2を適用するが、本番dbへのdeployについては考慮をしていない。
 
-#### 方法3. 別のrailsを立ち上げて、そこでDBは管理する
+### 方法3. 別のrailsを立ち上げて、そこでDBは管理する
 
 開発が別レポジトリになり開発の手間が増えるものの、
 
 運用としては一番シンプルで、運用難度が低いのがメリット。
 
 
-### 設定
+## 設定
 
 lib/tasks/db_another.rake
 
-### コマンド
+## コマンド
 
-#### MAIN DBの操作
+### MAIN DBの操作
 
 DBの作成
 ```
@@ -141,7 +141,7 @@ DBの更新
 bundle exec rake db:migrate
 ```
 
-#### Another DB
+### Another DB
 
 DBの作成
 ```
