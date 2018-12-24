@@ -12,7 +12,7 @@ AnotherDB: master/slave
 
 ### 初期設定ファイル
 
-[config/initializers/switch_point.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/switch_point.rb)
+- [config/initializers/switch_point.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/switch_point.rb)
 
 1. MasterとSlaveをそれぞれ登録する
 2. DBを垂直分割する場合は、mainとanotherのように、名前を分けて登録する
@@ -21,7 +21,7 @@ AnotherDB: master/slave
 
 ### モデルのルートクラス
 
-[app/models/application_record.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record.rb)
+- [app/models/application_record.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record.rb)
 
 1.application_recordに対してデフォルトで書き込みにする。
 
@@ -29,7 +29,7 @@ AnotherDB: master/slave
 SwitchPoint.writable!(:main)
 ```
 
-2. 垂直分割をする場合は、ActiveRecordを継承した親クラス(application_record)を分ける
+2.垂直分割をする場合は、ActiveRecordを継承した親クラス(application_record)を分ける
 
 dog系はapplication_record、cat系はapplication_record_catというように。
 
@@ -38,24 +38,21 @@ dog系はapplication_record、cat系はapplication_record_catというように�
 
 ### コントローラのルートクラス
 
-[app/controllers/application_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/application_controller.rb)
+- [app/controllers/application_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/application_controller.rb)
 
-1.around_actionを指定するとREAD側へ触れるようにする
+1.around_actionを指定するとREAD側へ降れるようにする。
 
 with_readonlyの共通メソッドをつくり、controllerでaround_actionでそのreadonlyメソッドを呼ぶ。
 
-これで、controller単位でreadonly側からselectできるようになる。
-
-なお、controllerでreadonlyを指定した場合は、メドッド内にwith_writableブロックが無い限り、
+これで、controller単位でreadonly側からselectできるようになる。なお、controllerでreadonlyを指定した場合は、メドッド内にwith_writableブロックが無い限り、
 viewでの読み込みや、アソシエーションも全てreadonly側になる。
 
 ### Logger
 
 gem 'arproxy'を使い、ログファイルに接続先のDBと、Read/Writeの情報を出す
 
-[lib/switch_point_logger_enhancement.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/lib/switch_point_logger_enhancement.rb)
-
-[config/initializers/arproxy.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/arproxy.rb)
+- [lib/switch_point_logger_enhancement.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/lib/switch_point_logger_enhancement.rb)
+- [config/initializers/arproxy.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/config/initializers/arproxy.rb)
 
 出力例
 ```
@@ -68,27 +65,20 @@ DogParent Load [dog][writable] (78.1ms)  SELECT  `dog_parents`.* FROM `dog_paren
 
 ### Readonlyへ処理を移す
 
+- [app/controllers/dogs_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/dogs_controller.rb)
+
 Slaveへ接続したいcontrollerの先頭に、以下を記述する
 
 ```
 around_action :with_readonly, except: []
 ```
 
-【例】
-
-[app/controllers/dogs_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/dogs_controller.rb)
-
-
 ### 分割したDBへ接続する
 
+- [cat_parentモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_parent.rb#L1)
+- [cat_childモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_child.rb#L1)
+
 Modelの継承元を、application_recordから変更する
-
-【例】
-
-[cat_parentモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_parent.rb#L1)
-
-[cat_childモデル](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/e32fe30274414bcbbf35787cf913e198eacc87e9/app/models/cat_child.rb#L1)
-
 
 ## DB管理 (migrationなど)
 
