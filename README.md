@@ -40,7 +40,7 @@ dog系はapplication_record、cat系はapplication_record_catというように�
 
 - [app/controllers/application_controller.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/controllers/application_controller.rb)
 
-1.around_actionを指定するとREAD側へ降れるようにする。
+1.around_actionを指定するとREAD側へ振れるようにする。
 
 with_readonlyの共通メソッドをつくり、controllerでaround_actionでそのreadonlyメソッドを呼ぶ。
 
