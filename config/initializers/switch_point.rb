@@ -1,17 +1,17 @@
 SwitchPoint.configure do |config|
 
-  dog_databases = {
+  main_databases = {
     readonly: :"#{Rails.env}_readonly",
     writable: :"#{Rails.env}"
   }
-  cat_databases = {
-    readonly: :"#{Rails.env}_other_readonly",
-    writable: :"#{Rails.env}_other"
+  another_databases = {
+    readonly: :"#{Rails.env}_another_readonly",
+    writable: :"#{Rails.env}_another"
   }
   if Rails.env.test?
-    dog_databases.delete(:readonly)
-    cat_databases.delete(:readonly)
+    main_databases.delete(:readonly)
+    another_databases.delete(:readonly)
   end
-  config.define_switch_point :dog, dog_databases
-  config.define_switch_point :cat, cat_databases
+  config.define_switch_point :main, main_databases
+  config.define_switch_point :another, another_databases
 end

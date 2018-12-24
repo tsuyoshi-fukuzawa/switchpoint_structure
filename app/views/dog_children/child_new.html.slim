@@ -1,3 +1,5 @@
+= render partial: "global/bread", locals: { second_title: '犬の情報', second_url: "#{dogs_path}", third_title: '親の一覧', third_url: "#{dog_parents_path}", fourth_title: '親の詳細', fourth_url: "#{dog_parent_path(@dog_parent)}", fifth_title: '子供一覧', fifth_url: "#{children_dog_child_path(@dog_parent)}", sixth_title: '新規作成'  }
+
 h1
   | #{@dog_parent.name}の子供の新規作成
 

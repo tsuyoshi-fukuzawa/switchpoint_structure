@@ -1,0 +1,30 @@
+
+h1, h2, h3, h4, h5, p, ol, ul {
+  margin-bottom: 24px;
+}
+
+body {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+ul { 
+  margin-left: 24px;
+  li {
+    list-style: disc;
+  }
+}

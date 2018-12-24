@@ -1,13 +1,11 @@
+= render partial: "global/bread", locals: { second_title: '猫の情報' }
+
 h2
-  | 猫の統計
+  | 猫の情報
 p
   | 親の数 #{CatParent.all.size}
   br
   | 子供の数 #{CatChild.all.size}
 
 a[href="#{cat_parents_path}"]
-  | 親の一覧を見る
-
-hr
-a[href="#{animals_path}"]
-  | 動物一覧へ戻る
+  | 詳細を見る

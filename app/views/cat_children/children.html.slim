@@ -1,3 +1,5 @@
+= render partial: "global/bread", locals: { second_title: '猫の情報', second_url: "#{cats_path}", third_title: '親の一覧', third_url: "#{cat_parents_path}", fourth_title: '親の詳細', fourth_url: "#{cat_parent_path(@cat_parent)}", fifth_title: '子供一覧'  }
+
 h1
   | #{@cat_parent.name}の子供一覧
 
@@ -7,9 +9,6 @@ ul
       a[href="#{child_show_cat_child_path(cat_child)}"]
         = cat_child.name
 
+hr
 a[href="#{child_new_cat_child_path(@cat_parent)}"]
   | 新規作成
-
-hr
-a[href="#{cat_parent_path(@cat_parent)}"]
-  | < 親の情報へ

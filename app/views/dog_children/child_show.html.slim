@@ -1,14 +1,11 @@
+= render partial: "global/bread", locals: { second_title: '犬の情報', second_url: "#{dogs_path}", third_title: '親の一覧', third_url: "#{dog_parents_path}", fourth_title: '親の詳細', fourth_url: "#{dog_parent_path(@dog_child.dog_parent)}", fifth_title: '子供一覧', fifth_url: "#{children_dog_child_path(@dog_child.dog_parent)}", sixth_title: '子の詳細'  }
+
 h1
   | #{@dog_child.name}の詳細
-div
-  | 名前 #{@dog_child.name}
-  br
-  | 親の名前 #{@dog_child.dog_parent.name}
-  br
+p
+  | 名前 #{@dog_child.name} (
   a[href="#{child_edit_dog_child_path(@dog_child)}"]
     | 編集する
-
-hr
-div
-  a[href="#{children_dog_child_path(@dog_child.dog_parent)}"]
-    | < 子供一へ戻る
+  | )
+p
+  | 親の名前 #{@dog_child.dog_parent.name}
