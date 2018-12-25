@@ -143,13 +143,11 @@ class TransactionCheckService < ApplicationService
   private
 
   def self.check_dog_count
-    count = { dog_parent: DogParent.all.size, dog_child: DogChild.all.size }
-    p count
+    p ({ dog_parent: DogParent.all.size, dog_child: DogChild.all.size })
   end
 
   def self.check_cat_count
-    count = { cat_parent: CatParent.all.size, cat_child: CatChild.all.size }
-    p count
+    p ({ cat_parent: CatParent.all.size, cat_child: CatChild.all.size })
   end
 
 end
