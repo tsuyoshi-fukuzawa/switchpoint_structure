@@ -152,8 +152,44 @@ bundle exec rake another:db:migrate
 ```
 
 
+## 各種確認
+
+### トランザクション
+
+app/serives/transaction_check_service.rb
+
+以下を確認した。
+
+- switchpointを入れても通常のロールバックには影響なし
+- トランザクションの途中にリードオンリーを挟んでもロールバックは正常に実行される
+- ネストした同一トランザクションは無視される(railsの仕様通り)
+- 別DBの処理をメインのトランザクションで扱ってもエラーにはならず別DBの値は保存できる
+- 別DBの処理を、違うDBのトランザクションで扱ってもロールバックできない
+- MainDBのトランザクションの中に、AnotherDBのトランザクションを入れて、それぞれロールバックすることができる
 
 
+### パフォーマンス
 
+app/serives/performance_check_service.rb
+
+上記のメソッドを使用して、selectを500回ランダム発行した場合の経過時間は下記のとおり。slaveでも処理の低下は見られない。
+
+master
+- "SELECT ELAPS: 18.278987"
+- "SELECT ELAPS: 18.124749"
+- "SELECT ELAPS: 16.054493"
+- "SELECT ELAPS: 15.386792"
+
+slave
+- "SELECT ELAPS: 16.82573"
+- "SELECT ELAPS: 16.402854"
+- "SELECT ELAPS: 15.865227"
+- "SELECT ELAPS: 15.750115"
+
+master and slave mix
+- "SELECT ELAPS: 16.093047"
+- "SELECT ELAPS: 16.389025"
+- "SELECT ELAPS: 16.352982"
+- "SELECT ELAPS: 16.144661"
 
 
