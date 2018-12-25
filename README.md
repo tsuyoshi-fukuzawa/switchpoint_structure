@@ -151,7 +151,7 @@ bundle exec rake another:db:migrate
 
 ### トランザクション
 
-app/serives/transaction_check_service.rb
+[app/serives/transaction_check_service.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/services/transaction_check_service.rb)
 
 以下を確認した。
 
@@ -165,7 +165,7 @@ app/serives/transaction_check_service.rb
 
 ### パフォーマンス
 
-app/serives/performance_check_service.rb
+[app/serives/performance_check_service.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/services/performance_check_service.rb)
 
 上記のメソッドを使用して、selectを500回ランダム発行した場合の経過時間は下記のとおり。slaveでも処理の低下は見られない。
 
