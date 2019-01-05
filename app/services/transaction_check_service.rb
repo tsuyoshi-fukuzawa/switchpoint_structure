@@ -7,12 +7,14 @@ class TransactionCheckService < ApplicationService
 
   # switchpointを入れても通常のロールバックには影響なし
   def self.check_rollback
+    DogParent.all.delete_all
+    DogChild.all.delete_all
     begin
       ApplicationRecord.transaction do
         dog_parent = DogParent.new
         dog_parent.name = 'コロ'
         dog_parent.save!
-        dog_child = dog_parent.dog_children.build
+        dog_child = DogChild.new
         dog_child.name = 'ポチ'
         dog_child.save!
         raise
@@ -21,6 +23,64 @@ class TransactionCheckService < ApplicationService
       self.check_dog_count
     end
   end
+
+  # ActiveRecord::Baseでのtransaction。これはロールバックできない
+  def self.check_rollback_activerecord
+    DogParent.all.delete_all
+    DogChild.all.delete_all
+    begin
+      ActiveRecord::Base.transaction do
+        dog_parent = DogParent.new
+        dog_parent.name = 'コロ'
+        dog_parent.save! # こちら側がロールバックできない！！
+        dog_child = DogChild.new
+        dog_child.name = 'ポチ'
+        dog_child.save!
+        raise
+      end
+    rescue => e
+      self.check_dog_count
+    end
+  end
+
+  # ActiveRecord::Baseでのtransaction_with。これはロールバックできる
+  def self.check_rollback_activerecord_with
+    DogParent.all.delete_all
+    DogChild.all.delete_all
+    begin
+      ActiveRecord::Base.transaction_with do
+        dog_parent = DogParent.new
+        dog_parent.name = 'コロ'
+        dog_parent.save!
+        dog_child = DogChild.new
+        dog_child.name = 'ポチ'
+        dog_child.save!
+        raise
+      end
+    rescue => e
+      self.check_dog_count
+    end
+  end
+
+  # モデルから派生してのtransaction。これはロールバックできる
+  def self.check_rollback_model
+    DogParent.all.delete_all
+    DogChild.all.delete_all
+    begin
+      DogParent.transaction do
+        dog_parent = DogParent.new
+        dog_parent.name = 'コロ'
+        dog_parent.save!
+        dog_child = DogChild.new
+        dog_child.name = 'ポチ'
+        dog_child.save!
+        raise
+      end
+    rescue => e
+      self.check_dog_count
+    end
+  end
+
 
   # トランザクションの途中にリードオンリーを挟んでもロールバックは正常に実行される
   def self.check_rollback_once_read
