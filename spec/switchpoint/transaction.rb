@@ -536,4 +536,62 @@ RSpec.describe DogParent do
     end
   end
 
+  describe 'After Commit' do
+    # 子犬の名前を'AFTER COMMIT TEST'とすると、子猫が産まれる仕組みにしてある
+    # そもそもAfterCommitでのDB操作は設計的におかしいので、トリガーのタイミングを調べる
+
+    it '別DBのtransaction_withの完了で発動しないか確認する' do
+      ApplicationRecordAnother.transaction_with do
+        neko = CatParent.new
+        neko.save!
+        ApplicationRecord.transaction_with do
+          koinu = DogChild.new(name: 'AFTER COMMIT TEST')
+          koinu.save!
+          expect(CatChild.all.size).to eq(0)
+        end
+        expect(CatChild.all.size).to eq(1)
+      end
+      expect(CatChild.all.size).to eq(1)
+    end
+
+    it '別DBのtransaction_withの完了で発動しないか確認する' do
+      ApplicationRecord.transaction_with do
+        koinu = DogChild.new(name: 'AFTER COMMIT TEST')
+        koinu.save!
+        ApplicationRecordAnother.transaction_with do
+          neko = CatParent.new
+          neko.save!
+        end
+        expect(CatChild.all.size).to eq(0)
+      end
+      expect(CatChild.all.size).to eq(1)
+    end
+  end
+
+  describe '不整合パターン' do
+
+    it 'WritableのTransaction中にReadonlyを参照してしまう' do
+      ApplicationRecord.transaction_with do
+        inu = DogParent.new
+        inu.save!
+        expect(DogParent.all.size).to eq(1)
+        ApplicationRecord.with_readonly do
+          expect(DogParent.all.size).to eq(0)
+        end
+      end
+    end
+
+    it 'WritableのTransaction中にReadonlyを参照してしまう' do
+      # rspecがSAVEPOINTをつかって動くためreadonlyに伝搬しないので、確認できないが以下も問題なし
+      # dog = nil
+      # ApplicationRecord.with_readonly do
+      #   dog = DogParent.all.first
+      #   ApplicationRecord.transaction_with do
+      #     dog.name = 'ポチ1'
+      #     dog.save!
+      #   end
+      #   p dog.name -> 'ポチ1'
+      # end
+    end
+  end
 end

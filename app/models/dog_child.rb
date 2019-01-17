@@ -7,4 +7,11 @@ class DogChild < ApplicationRecord
       cat.save!
     end
   end
+
+  after_commit do
+    if name == 'AFTER COMMIT TEST'
+      cat = CatChild.new
+      cat.save!
+    end
+  end
 end
