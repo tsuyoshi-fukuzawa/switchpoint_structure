@@ -9,11 +9,13 @@ default: &default
 
 development:
   <<: *default
+  database: <%= ENV.fetch("DB_NAME_ANOTHER") { 'switchpoint_another' } %>
   host: <%= ENV.fetch("DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
 test:
   <<: *default
-  database: 'switchpoint_test'
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
 production:
   <<: *default

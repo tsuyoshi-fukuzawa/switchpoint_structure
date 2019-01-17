@@ -1,7 +1,6 @@
 default: &default
   adapter: mysql2
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: 'switchpoint'
+  pool:     <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: 'switchpoint'
   password: 'switchpoint'
   timeout: 5000
@@ -10,23 +9,44 @@ default: &default
 # mysqlのmaster/slaveを指定するのが正しいが、mockでは単一DBで同じところを指定しておく
 development:
   <<: *default
+  database: <%= ENV.fetch("DB_NAME_MAIN") { 'switchpoint' } %>
   host: <%= ENV.fetch("DB_HOST_MAIN_MASTER") { 'localhost' } %>
 
 development_readonly:
   <<: *default
+  database: <%= ENV.fetch("DB_NAME_MAIN") { 'switchpoint' } %>
   host: <%= ENV.fetch("DB_HOST_MAIN_SLAVE") { 'localhost' } %>
 
 development_another:
   <<: *default
+  database: <%= ENV.fetch("DB_NAME_ANOTHER") { 'switchpoint_another' } %>
   host: <%= ENV.fetch("DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
 development_another_readonly:
   <<: *default
+  database: <%= ENV.fetch("DB_NAME_ANOTHER") { 'switchpoint_another' } %>
   host: <%= ENV.fetch("DB_HOST_ANOTHER_SLAVE") { 'localhost' } %>
 
 test:
   <<: *default
-  database: 'switchpoint_test'
+  database: <%= ENV.fetch("TEST_DB_NAME_MAIN") { 'switchpoint_test' } %>
+  host: <%= ENV.fetch("TEST_DB_HOST_MAIN_MASTER") { 'localhost' } %>
+
+test_readonly:
+  <<: *default
+  database: <%= ENV.fetch("TEST_DB_NAME_MAIN") { 'switchpoint_test' } %>
+  host: <%= ENV.fetch("TEST_DB_HOST_MAIN_SLAVE") { 'localhost' } %>
+
+test_another:
+  <<: *default
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
+
+test_another_readonly:
+  <<: *default
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_SLAVE") { 'localhost' } %>
+
 
 production:
   <<: *default

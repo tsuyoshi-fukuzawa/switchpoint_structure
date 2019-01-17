@@ -4,8 +4,19 @@ SwitchPoint.configure do |config|
   # If :writable key is omitted, it uses ActiveRecord::Base.connection as writable one.
   # writableの設定を省略して、readonlyだけにすると、DatabaseCleanerでもトランザクションをロールバックできるようになる
   if Rails.env.test?
-    main_databases    = { readonly: :"#{Rails.env}" }
-    another_databases = { readonly: :"#{Rails.env}_another_readonly" }
+    # main_databases    = { readonly: :"#{Rails.env}" }
+    # another_databases = { readonly: :"#{Rails.env}_another_readonly" }
+
+    # testでもDB分割をテストする場合
+    main_databases = {
+      readonly: :"#{Rails.env}_readonly",
+      writable: :"#{Rails.env}"
+    }
+    another_databases = {
+      readonly: :"#{Rails.env}_another_readonly",
+      writable: :"#{Rails.env}_another"
+    }
+
   else
     main_databases = {
       readonly: :"#{Rails.env}_readonly",
