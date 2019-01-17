@@ -411,6 +411,31 @@ RSpec.describe DogParent do
       expect(DogParent.all.size).to eq(0)
       expect(DogChild.all.size).to eq(0)
     end
+
+    it '(念のため)犬Readonlyの中に猫トランザクションがある場合は、当然、猫トランザクションには影響がない' do
+      begin
+        ApplicationRecord.with_readonly do
+          ApplicationRecordAnother.transaction_with do
+            neko = CatParent.new
+            neko.save!
+
+            koneko = CatChild.new
+            koneko.save!
+
+            expect(CatParent.all.size).to eq(1)
+            expect(CatChild.all.size).to eq(1)
+            raise 'rollback'
+          end
+        end
+      rescue => e
+        @rescued = true
+        expect(e.to_s).to eq('rollback')
+      end
+      expect(@rescued).to eq(true)
+      expect(CatParent.all.size).to eq(0)
+      expect(CatChild.all.size).to eq(0)
+    end
+
   end
 
   describe 'ReadonlyとReadonly (main: slave, another: slave)' do
