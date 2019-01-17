@@ -3,10 +3,11 @@ if Rails.env.development? || Rails.env.test?
   class SwitchPointLoggerEnhancement < Arproxy::Base
     def execute(sql, name = nil)
       begin
-        database_config = self.proxy_chain.connection.pool.spec.config
-        if database_config.present? && database_config[:switch_point].present?
-          switch_point = database_config[:switch_point]
-          name = "#{name} [#{switch_point[:name]}][#{switch_point[:mode]}]"
+        if self.proxy_chain.connection.pool.present?
+          database_config = self.proxy_chain.connection.pool.spec.config
+          if database_config.present? && database_config[:switch_point].present?
+            name = "#{name} [#{database_config[:switch_point][:name]}][#{database_config[:switch_point][:mode]}]"
+          end
         end
       rescue => e
         name = "#{name} [#{e}]"
