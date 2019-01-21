@@ -1,5 +1,6 @@
 require "capistrano/setup"
 require "capistrano/deploy"
+require 'capistrano/rails/assets'
 
 # for Git
 require "capistrano/scm/git"
