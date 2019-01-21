@@ -60,4 +60,11 @@ gem 'switch_point'
 # Logger for database connections
 gem 'arproxy'
 
+# Deploy
+group :development do
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano3-puma'
+end
+
 
