@@ -6,7 +6,6 @@ default: &default
   timeout: 5000
 
 
-# mysqlのmaster/slaveを指定するのが正しいが、mockでは単一DBで同じところを指定しておく
 development:
   <<: *default
   database: <%= ENV.fetch("DB_NAME_MAIN") { 'switchpoint' } %>
@@ -39,12 +38,12 @@ test_readonly:
 
 test_another:
   <<: *default
-  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_test' } %>
   host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
 test_another_readonly:
   <<: *default
-  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_test' } %>
   host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_SLAVE") { 'localhost' } %>
 
 

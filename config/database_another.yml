@@ -1,4 +1,6 @@
-# another系のmigrationのために存在。できればdatabase.ymlに統合したい
+#
+# Migration用
+#
 default: &default
   adapter: mysql2
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -7,14 +9,17 @@ default: &default
   password: 'switchpoint'
   timeout: 5000
 
+# developmentは、anotherを作成する
 development:
   <<: *default
   database: <%= ENV.fetch("DB_NAME_ANOTHER") { 'switchpoint_another' } %>
   host: <%= ENV.fetch("DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
+# testは、anotherを作らず同居させる
+# writableの設定を省略して、readonlyだけにするとActiveRecord::Baseが使われ、別DBを使用できないため
 test:
   <<: *default
-  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_another_test' } %>
+  database: <%= ENV.fetch("TEST_DB_NAME_ANOTHER") { 'switchpoint_test' } %>
   host: <%= ENV.fetch("TEST_DB_HOST_ANOTHER_MASTER") { 'localhost' } %>
 
 production:

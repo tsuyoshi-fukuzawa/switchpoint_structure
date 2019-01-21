@@ -26,4 +26,18 @@ ActiveRecord::Schema.define(version: 20181218081313) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "dog_children", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "dog_parent_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dog_parent_id"], name: "index_dog_children_on_dog_parent_id"
+  end
+
+  create_table "dog_parents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 end
