@@ -2,7 +2,7 @@ namespace :another do
   namespace :db do
     desc 'Migrate Another Database'
     task :migrate do
-      on roles(:db) do
+      on roles(:another) do
         within release_path do
           execute :bundle, :exec, :rake, "another:db:migrate RAILS_ENV=#{fetch :rails_env}"
         end
@@ -11,7 +11,7 @@ namespace :another do
 
     desc 'Rollback Another Database'
     task :rollback do
-      on roles(:db) do
+      on roles(:another) do
         within release_path do
           execute :bundle, :exec, :rake, "another:db:rollback RAILS_ENV=#{fetch :rails_env}"
         end

@@ -21,7 +21,16 @@ set :linked_files, %w{.env}
 set :stage, :production
 set :rails_env, 'production'
 
-server ENV.fetch("SRV_PROD"), user: 'ec2-user', roles: %w{app web db}
+set :migration_role, :another
+set :conditionally_migrate, true
+
+# set :migration_servers, -> { primary(fetch(:migration_role)) }
+
+app_servers = ["ec2-user@#{ENV.fetch('SRV_PROD1')}", "ec2-user@#{ENV.fetch('SRV_PROD2')}"]
+role :app, app_servers
+role :another, app_servers.first
+# role :app, ["ec2-user@#{ENV.fetch('SRV_PROD1')}", "ec2-user@#{ENV.fetch('SRV_PROD2')}"]
+# role :db, ["ec2-user@#{ENV.fetch('SRV_PROD1')}"]
 
 # auth
 set :ssh_options, {
@@ -29,3 +38,5 @@ set :ssh_options, {
   forward_agent: true,
   auth_methods: %w(publickey)
 }
+
+after 'deploy:migrate', 'another:db:migrate'
