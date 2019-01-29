@@ -1,9 +1,6 @@
 require 'rails_helper'
 
-#
-# 以下のテストは、DBを用意し
-# TESTで使用するDBのコンフィグに、Read/Writerの設定をいれ、かつMainとAnotherに分けること
-#
+# TESTで使用するDBのコンフィグに、Read/Writerの設定をいれ、かつMainとAnotherに分けて実行する
 RSpec.describe DogParent do
   before(:each) do
     @rescued = false

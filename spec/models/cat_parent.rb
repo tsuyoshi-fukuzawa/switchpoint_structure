@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# switchpointを使うようにコンフィグを修正した上で実行すること
 RSpec.describe DogParent, type: :model do
 
   before(:each) do

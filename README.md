@@ -16,14 +16,13 @@ AnotherDB: master/slave
 
 1. MasterとSlaveをそれぞれ登録する
 2. DBを垂直分割する場合は、mainとanotherのように、名前を分けて登録する
-3. Rspecのために、testの場合はreadonlyを消す
-  readonlyの設定を消すと、with_readonlyブロックで囲われても、writableに接続できる
+3. test環境は、Switchpointのconnectionを使わず、ActiveRecord::Baseを使うようにモンキーパッチを無効化する。(DatabaseCleanerがうまく動作しないため)
 
 ## モデルのルートクラス
 
 - [app/models/application_record.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record.rb)
 
-1.application_recordに対してデフォルトで書き込みにする。
+1. デフォルトで書き込みにする。
 
 ```
 SwitchPoint.writable!(:main)
@@ -31,7 +30,7 @@ SwitchPoint.writable!(:main)
 
 2.垂直分割をする場合は、ActiveRecordを継承した親クラス(application_record)を分ける
 
-dog系はapplication_record、cat系はapplication_record_catというように。
+dog系はApplicationRecord、cat系はApplicationRecordAnotherというように。
 
 例: [application_record_cat.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/models/application_record_cat.rb)
 
@@ -44,8 +43,34 @@ dog系はapplication_record、cat系はapplication_record_catというように�
 
 with_readonlyの共通メソッドをつくり、controllerでaround_actionでそのreadonlyメソッドを呼ぶ。
 
-これで、controller単位でreadonly側からselectできるようになる。なお、controllerでreadonlyを指定した場合は、メドッド内にwith_writableブロックが無い限り、
+これで、controller単位でreadonly側からselectできるようになる。
+なお、controllerでreadonlyを指定した場合は、メドッド内にwith_writableブロックが無い限り、
 viewでの読み込みや、アソシエーションも全てreadonly側になる。
+
+## 挙動について
+
+### Readonly
+
+別DBのreadonlyを同時に使いたい場合は、以下のように二重で張ることで対応できる
+
+```
+ApplicationRecord.with_readonly do
+  ApplicationRecordAnother.with_readonly do
+    
+  end
+end
+
+```
+
+### Transaction
+
+transactionを張る場合は、with_writableと、transactionが同時に生成されるtransaction_withを使うことを推奨。
+
+```
+ApplicationRecord.transaction_with do
+  xxxx.save!
+end
+```
 
 ## Logger
 
@@ -80,32 +105,7 @@ around_action :with_readonly, except: []
 
 Modelの継承元を、application_recordから変更する
 
-# DB管理 (migrationなど)
-
-## パターン
-
-垂直分割する場合、migration等の運用手順が増える。
-
-その際、migrationを行う方法として、以下の手段が考えられる。
-
-
-### 方法1. 擬似的に垂直分割する
-
-同じテーブル構成のmasterDBを複数台用意し、使用するテーブルを振り分けて使う。(例：片方をメインテーブル、もう片方を認証系データのみというように)
-
-開発環境に影響を与えず、かつ本番DBのmigrationをあまり設定に手を加えずに運用できるのがメリット。ただ、本番DBにトラブルが起きた時や、振り分けミスが発生した際は、リカバリが非常につらい。
-
-### 方法2. 別のrakeタスクを用意する
-
-別DBに接続するrakeタスクを作成する。設定ファイル類も全て別のものを用意する(migrateファイル、database.ymlなど)その上でデブロイ時にこれらのrakeタスクが実行されるようにする。
-
-ただし、別DBにデプロイした本番dbのrollbackは手動で行う必要があるなど、トラブル時にリカバリがつらい。開発時も、別のrakeタスクでコントロールするなど、少し開発体制の変更が必要。
-
-このstructureサンプルでは、この方法2を適用するが、本番dbへのdeployについては考慮をしていない。
-
-### 方法3. 別のrailsを立ち上げて、そこでDBは管理する
-
-開発が別レポジトリになり開発の手間が増えるものの、運用としては一番シンプルで、運用難度が低いのがメリット。
+# DB migration
 
 ## 設定
 
@@ -147,43 +147,18 @@ DBの更新
 bundle exec rake another:db:migrate
 ```
 
-## 各種確認
+# Deploy
 
-### トランザクション
+capistranoのタスクを追加し、deploy:migrationのafterで動作するようにする
 
-[app/serives/transaction_check_service.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/services/transaction_check_service.rb)
+lib/capistrano/tasks/another.rake
 
-以下を確認した。
+## コマンド
 
-- switchpointを入れても通常のロールバックには影響なし
-- トランザクションの途中にリードオンリーを挟んでもロールバックは正常に実行される
-- ネストした同一トランザクションは無視される(railsの仕様通り)
-- 別DBの処理をメインのトランザクションで扱ってもエラーにはならず別DBの値は保存できる
-- 別DBの処理を、違うDBのトランザクションで扱ってもロールバックできない
-- MainDBのトランザクションの中に、AnotherDBのトランザクションを入れて、それぞれロールバックすることができる
+### migration
 
+cap production deploy
 
-### パフォーマンス
+### rollback
 
-[app/serives/performance_check_service.rb](https://github.com/tsuyoshi-fukuzawa/switchpoint_structure/blob/master/app/services/performance_check_service.rb)
-
-上記のメソッドを使用して、selectを500回ランダム発行した場合の経過時間は下記のとおり。slaveでも処理の低下は見られない。
-
-master
-- "SELECT ELAPS: 18.278987"
-- "SELECT ELAPS: 18.124749"
-- "SELECT ELAPS: 16.054493"
-- "SELECT ELAPS: 15.386792"
-
-slave
-- "SELECT ELAPS: 16.82573"
-- "SELECT ELAPS: 16.402854"
-- "SELECT ELAPS: 15.865227"
-- "SELECT ELAPS: 15.750115"
-
-master and slave mix
-- "SELECT ELAPS: 16.093047"
-- "SELECT ELAPS: 16.389025"
-- "SELECT ELAPS: 16.352982"
-- "SELECT ELAPS: 16.144661"
-
+cap production another:db:rollback

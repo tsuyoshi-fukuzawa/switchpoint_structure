@@ -1,10 +1,8 @@
 require 'rails_helper'
 
-#
-# TESTで使用するDBをMainとAnotherに分けること
-#
+# テストでswitchpointを使うようにコンフィグを修正した場合、このテストが失敗する。
 RSpec.describe DogParent do
-  describe 'RSPECでデータが消えるか確認' do
+  describe 'データが消えるか確認' do
     before(:each) do
     end
     it '1回目' do
@@ -18,23 +16,8 @@ RSpec.describe DogParent do
     end
 
     it '2回目' do
+      expect(DogParent.all.size).to eq(0)
       expect(CatParent.all.size).to eq(0)
-    end
-  end
-
-  describe 'Factoryデータが消えるか確認' do
-    before(:each) do
-      FactoryBot.create(:dog_parent)
-      FactoryBot.create(:cat_parent)
-    end
-    it '1回目' do
-      expect(DogParent.all.size).to eq(1)
-      expect(CatParent.all.size).to eq(1)
-    end
-
-    it '2回目' do
-      expect(DogParent.all.size).to eq(1)
-      expect(CatParent.all.size).to eq(1)
     end
   end
 end

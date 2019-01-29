@@ -23,14 +23,18 @@ namespace :another do
       Rake::Task["db:migrate"].invoke
     end
 
+    namespace :migrate do
+      task reset: :set_custom_db_config_paths do
+        Rake::Task["db:migrate:reset"].invoke
+      end
+    end
+
     task rollback: :set_custom_db_config_paths do
       Rake::Task["db:rollback"].invoke
     end
 
     task reset: :set_custom_db_config_paths do
-      Rake::Task['db:drop'].invoke
-      Rake::Task['db:create'].invoke
-      Rake::Task['db:migrate'].invoke
+      Rake::Task['db:reset'].invoke
     end
 
     task seed: :set_custom_db_config_paths do
@@ -41,11 +45,16 @@ namespace :another do
       Rake::Task["db:version"].invoke
     end
 
+    namespace :schema do
+      task load: :set_custom_db_config_paths do
+        Rake::Task["db:schema:load"].invoke
+      end
+    end
+
     namespace :test do
       task prepare: :set_custom_db_config_paths do
-        Rake::Task['db:drop'].invoke
-        Rake::Task['db:create'].invoke
-        Rake::Task['db:migrate'].invoke
+        # test環境はmain databaseに同居するので、schema:loadでテーブル単位の再作成を行う
+        Rake::Task['db:schema:load'].invoke
       end
     end
   end
